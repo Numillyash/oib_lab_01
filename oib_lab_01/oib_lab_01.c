@@ -1,5 +1,5 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-//#define DEBUG
+#define DEBUG
 
 #include <stdio.h>
 #include <math.h>
@@ -29,14 +29,14 @@ int F_3 = 1; // Порядковый номер третей буквы фами
 /// <returns>Остаток</returns>
 int del_ost(double a, int b)
 {
-    double c = a / b, prom;
+    double c = a / b;
 
     modf(c, &c);
-    a -= b * c;
+    a -= (double)b * c;
     if (a == 0)
         return 0;
     else
-        return (int)a;
+        return ((int)a < 0)? -a-b : a;
 }
 
 /// <summary>
@@ -115,7 +115,7 @@ void task2(const char* string, int m, int k)
 /// <returns>НОД трех чисел</returns>
 int euclide_algorithm(int a, int b)
 {
-    if (a < b)
+    if (abs(a) < abs(b))
     {
         int _ = b;
         b = a;
@@ -236,6 +236,72 @@ void task4()
     printf("%d: %s\n", N1, (millers_method(N1) == 1) ? "Составное" : "Простое");
 }
 
+int euclide_algorithm_modifyed(int s, int t, int *a) {
+    if (s < t)
+    {
+        int _ = t;
+        t = s;
+        s = _;
+    }
+    //s = t * q_0 + r_1
+    int r = s % t;
+    int q = s / t;
+    #ifdef DEBUG
+    printf("%d = %d * %d + %d\n", s, t, s / t, s % t);
+    #endif // DEBUG
+
+    if (r != 0)
+    {
+        euclide_algorithm_modifyed(t, r, a);
+        int _a, _b, _c, _d;
+        _a = a[0];
+        _b = a[1];
+        _c = a[2];
+        _d = a[3];
+        a[0] = _b;
+        a[1] = _a - _b * q;
+        a[2] = _d;
+        a[3] = _c - _d * q;
+    }
+    else
+    {
+        int _a, _b, _c, _d;
+        _a = a[0];
+        _b = a[1];
+        _c = a[2];
+        _d = a[3];
+        a[0] = _b;
+        a[1] = _a - _b * q;
+        a[2] = _d;
+        a[3] = _c - _d * q;
+        return t;
+    }
+}
+
+/// <summary>
+/// Подпрограмма, выполняющая задачу 5
+/// </summary>
+void task5()
+{
+    int p = 3571, q = 2039;
+    int n = p * q;
+    int phi_n = (p - 1) * (q - 1); //7275660
+    int e = 65537;
+    
+    int a[4] = {1,0,0,1};
+    euclide_algorithm_modifyed(phi_n, e, a);
+    #ifdef DEBUG
+    printf("|%d %d|\n|%d %d|\n", a[0], a[1], a[2], a[3]);
+    #endif // DEBUG
+
+    int d = a[1]; // -1188427
+
+#ifdef DEBUG
+    printf("e = %lf, d = %lf, e*d = %lf, phi_n = %lf\n", (double)e, (double)d, (double)e * (double)d, (double)phi_n);
+    printf("%d\n", del_ost((double)e * (double)d, phi_n));
+#endif // DEBUG
+}
+
 int main() {
     setlocale(LC_ALL, "rus");
 
@@ -250,6 +316,8 @@ int main() {
     task4();
     */
 
+    //euclide_algorithm(-13, 5);
+    task5();
 
     #ifdef DEBUG
     _getch();
