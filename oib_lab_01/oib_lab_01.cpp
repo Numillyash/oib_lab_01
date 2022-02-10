@@ -3,17 +3,31 @@
 #include <math.h>
 #include <locale.h>
 #include <string.h>
+#include <conio.h>
 
 #define elif else if
 
-int N_gr = 3;
-int N_sp = 20;
-int F_3 = 1;
+int N_gr = 3; // Номер группы
+int N_sp = 20; // Порядковый номер ученика в группе
+int F_3 = 1; // Порядковый номер третей буквы фамилии в алфавите
 
-void Ciesar_sipher(const char* string)
+/// <summary>
+/// Подпрограмма, выполняющая задачу 1 
+/// </summary>
+void task1()
 {
-    int m = 33; // мощность массива
-    int k = 3; // сдвиг
+    int r1 = (int)((unsigned long long)(pow((N_gr + N_sp), 11) + F_3) % 11);
+    printf("%d\n", r1);
+}
+
+/// <summary>
+/// Подпрограмма, выполняющая задачу 2
+/// </summary>
+/// <param name="string">Строка с ФИО</param>
+/// <param name="m">Мощность алфавита</param>
+/// <param name="k">Сдвиг для шифра Цезаря</param>
+void task2(const char* string, int m, int k)
+{
     int symb_first_small = (int)'а';
     int symb_first_big = (int)'А';
     int length = strlen(string);
@@ -21,7 +35,7 @@ void Ciesar_sipher(const char* string)
     int numb, rot_numb;
     char rot_symb;
 
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < length - 1; i++)
     {
         if (string[i] >= 'А' && string[i] <= 'Я')
         {
@@ -40,18 +54,17 @@ void Ciesar_sipher(const char* string)
         else
             printf("%c", ' ');
     }
+    printf("\n");
 }
 
 int main() {
     setlocale(LC_ALL, "rus");
+
+    task1();
+
     char fio[] = "Улановский Георгий Алексеевич";
+    task2(fio, 33, 3);
 
-    int r1 = (int)((unsigned long long)(pow((N_gr + N_sp), 11) + F_3) % 11);
-    printf("%d\n", r1);
-    printf("%s\n", fio);
-
-    Ciesar_sipher(fio);
-
-    scanf("%d");
+    _getch();
     return 0;
 }
