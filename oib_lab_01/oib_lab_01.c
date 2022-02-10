@@ -36,7 +36,7 @@ int del_ost(double a, int b)
     if (a == 0)
         return 0;
     else
-        return ((int)a < 0)? -a-b : a;
+        return ((int)a < 0)? a+b : a;
 }
 
 /// <summary>
@@ -48,15 +48,15 @@ int del_ost(double a, int b)
 /// <returns>Остаток</returns>
 int del_ost_pow(double a, double t, int b)
 {
-    int d = del_ost(a, b);
-    int ost = d;
+    double d = del_ost(a, b);
+    double ost = d;
 
     if (d == 0)
         return 0;
     else
         for (int i = 1; i < t; i++)
         {
-            ost = (ost*d) % b;
+            ost = del_ost(ost*d, b);
         }
     return ost;
 }
@@ -84,6 +84,7 @@ void task2(const char* string, int m, int k)
     // x -> (x+k)mod m
     int numb, rot_numb;
     char rot_symb;
+    k = k % m;
 
     for (int i = 0; i < length; i++)
     {
@@ -283,10 +284,10 @@ int euclide_algorithm_modifyed(int s, int t, int *a) {
 /// </summary>
 void task5()
 {
-    int p = 3571, q = 2039;
+    int p = 3557, q = 2579;
     int n = p * q;
-    int phi_n = (p - 1) * (q - 1); //7275660
-    int e = 65537;
+    int phi_n = (p - 1) * (q - 1); //9173503
+    int e = 67;
     
     int a[4] = {1,0,0,1};
     euclide_algorithm_modifyed(phi_n, e, a);
@@ -294,12 +295,61 @@ void task5()
     printf("|%d %d|\n|%d %d|\n", a[0], a[1], a[2], a[3]);
     #endif // DEBUG
 
-    int d = a[1]; // -1188427
+    int d = a[1]; // 2462875
 
 #ifdef DEBUG
     printf("e = %lf, d = %lf, e*d = %lf, phi_n = %lf\n", (double)e, (double)d, (double)e * (double)d, (double)phi_n);
     printf("%d\n", del_ost((double)e * (double)d, phi_n));
 #endif // DEBUG
+}
+
+/// <summary>
+/// Подпрограмма, выполняющая задачу 6
+/// </summary>
+void task6(char* x)
+{
+    int p = 3557, q = 2579;
+    int n = p * q; // 9173503
+    int e = 67;
+    int phi_n = (p - 1) * (q - 1); //9173503
+    int d = 2462875; //взято из расчетов задачи 5
+    int str_len = strlen(x);
+
+    int* xy = (int*)malloc(str_len);
+    char* xyx = (char*)malloc(str_len+1);
+
+    for (int i = 0; i < str_len; i++)
+    {
+        int symb = (int)x[i];
+        xy[i] = del_ost_pow(symb,e,n);
+    }
+    for (int i = 0; i < str_len; i++)
+    {
+        int symb = xy[i];
+        xyx[i] = (char)del_ost_pow(symb, d, n);
+    }
+    xyx[str_len] = '\0';
+
+#ifdef DEBUG
+    for (int i = 0; i < str_len; i++)
+    {
+        printf("%d ", (int)x[i]);
+    }
+    printf("\n");
+    for (int i = 0; i < str_len; i++)
+    {
+        printf("%d ", (int)xy[i]);
+    }
+    printf("\n");
+    for (int i = 0; i < str_len; i++)
+    {
+        printf("%d ", (int)xyx[i]);
+    }
+    printf("\n");
+#endif // DEBUG
+
+
+    printf("%s\n", xyx);
 }
 
 int main() {
@@ -314,11 +364,12 @@ int main() {
     task3();
 
     task4();
-    */
-
-    //euclide_algorithm(-13, 5);
+    
     task5();
-
+    
+    fio[] = "Numillyash";
+    task6(fio);
+    */
     #ifdef DEBUG
     _getch();
     #endif // DEBUG
