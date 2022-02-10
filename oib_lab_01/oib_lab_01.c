@@ -36,7 +36,7 @@ int del_ost(double a, int b)
     if (a == 0)
         return 0;
     else
-        return ((int)a < 0)? a+b : a;
+        return ((int)a < 0) ? a + b : a;
 }
 
 /// <summary>
@@ -56,7 +56,7 @@ int del_ost_pow(double a, double t, int b)
     else
         for (int i = 1; i < t; i++)
         {
-            ost = del_ost(ost*d, b);
+            ost = del_ost(ost * d, b);
         }
     return ost;
 }
@@ -124,9 +124,9 @@ int euclide_algorithm(int a, int b)
     }
     //a = b * q_0 + r_1
     int r = a % b;
-    #ifdef DEBUG
-    printf("%d = %d * %d + %d\n", a, b, a/b, a%b);
-    #endif // DEBUG
+#ifdef DEBUG
+    printf("%d = %d * %d + %d\n", a, b, a / b, a % b);
+#endif // DEBUG
 
     if (r != 0)
         euclide_algorithm(b, r);
@@ -155,13 +155,13 @@ int euclide_algorithm_three(int a, int b, int c)
 /// </summary>
 void task3()
 {
-    int A = pow(N_gr * (8 + N_sp % 7),2);
+    int A = pow(N_gr * (8 + N_sp % 7), 2);
     int B = 11032004;
     //printf("%d\n", r1);
 
     printf("%d\n", euclide_algorithm(A, (B % 95) + 900));
     printf("%d\n", euclide_algorithm(A, ((B + 50) % 97) + 700));
-    printf("%d\n", euclide_algorithm_three(A, ((B + 20) % 101) + 1500, ((B -40) % 103) + 2500));
+    printf("%d\n", euclide_algorithm_three(A, ((B + 20) % 101) + 1500, ((B - 40) % 103) + 2500));
 }
 
 bool millers_method(int N)
@@ -187,7 +187,7 @@ bool millers_method(int N)
     {
         fl1 = true; fl2 = true;
 
-        a = 2 + rand()%(N-2);
+        a = 2 + rand() % (N - 2);
 
         if (euclide_algorithm(N, a) != 1) //свойство 1
         {
@@ -195,7 +195,7 @@ bool millers_method(int N)
 #ifdef DEBUG
             printf("\nУсловие 1 нарушено, a = %d, t = %d, N = %d. \nN кратно a", a, t, N);
 #endif // DEBUG
-        }            
+        }
 
         if (del_ost_pow(a, t, N) != 1) // свойство 2
         {
@@ -208,10 +208,10 @@ bool millers_method(int N)
                     fl2 = true;
                 }
             }
-        #ifdef DEBUG
-            if(fl2 == false)
+#ifdef DEBUG
+            if (fl2 == false)
                 printf("\nУсловие 2 нарушено, a = %d, t = %d, k = %d, N = %d. \nМодули чисел: без k %d, с k %d", a, t, k, N, del_ost_pow(a, t, N), del_ost_pow(a, t * pow(2, k - 1), N));
-        #endif // DEBUG
+#endif // DEBUG
         }
 
         if (!fl1 || !fl2)
@@ -237,7 +237,7 @@ void task4()
     printf("%d: %s\n", N1, (millers_method(N1) == 1) ? "Составное" : "Простое");
 }
 
-int euclide_algorithm_modifyed(int s, int t, int *a) {
+int euclide_algorithm_modifyed(int s, int t, int* a) {
     if (s < t)
     {
         int _ = t;
@@ -247,9 +247,9 @@ int euclide_algorithm_modifyed(int s, int t, int *a) {
     //s = t * q_0 + r_1
     int r = s % t;
     int q = s / t;
-    #ifdef DEBUG
+#ifdef DEBUG
     printf("%d = %d * %d + %d\n", s, t, s / t, s % t);
-    #endif // DEBUG
+#endif // DEBUG
 
     if (r != 0)
     {
@@ -288,12 +288,12 @@ void task5()
     int n = p * q;
     int phi_n = (p - 1) * (q - 1); //9173503
     int e = 67;
-    
-    int a[4] = {1,0,0,1};
+
+    int a[4] = { 1,0,0,1 };
     euclide_algorithm_modifyed(phi_n, e, a);
-    #ifdef DEBUG
+#ifdef DEBUG
     printf("|%d %d|\n|%d %d|\n", a[0], a[1], a[2], a[3]);
-    #endif // DEBUG
+#endif // DEBUG
 
     int d = a[1]; // 2462875
 
@@ -316,17 +316,66 @@ void task6(char* x)
     int str_len = strlen(x);
 
     int* xy = (int*)malloc(str_len);
-    char* xyx = (char*)malloc(str_len+1);
+    char* xyx = (char*)malloc(str_len + 1);
 
     for (int i = 0; i < str_len; i++)
     {
         int symb = (int)x[i];
-        xy[i] = del_ost_pow(symb,e,n);
+        xy[i] = del_ost_pow(symb, e, n);
     }
     for (int i = 0; i < str_len; i++)
     {
         int symb = xy[i];
         xyx[i] = (char)del_ost_pow(symb, d, n);
+    }
+    xyx[str_len] = '\0';
+
+#ifdef DEBUG
+    for (int i = 0; i < str_len; i++)
+    {
+        printf("%d ", (int)x[i]);
+    }
+    printf("\n");
+    for (int i = 0; i < str_len; i++)
+    {
+        printf("%d ", (int)xy[i]);
+    }
+    printf("\n");
+    for (int i = 0; i < str_len; i++)
+    {
+        printf("%d ", (int)xyx[i]);
+    }
+    printf("\n");
+#endif // DEBUG
+
+
+    printf("%s\n", xyx);
+}
+
+/// <summary>
+/// Подпрограмма, выполняющая задачу 7
+/// </summary>
+void task7(char* x)
+{
+    int p = 3557, q = 2579;
+    int n = p * q; // 9173503
+    int e = 67;
+    int phi_n = (p - 1) * (q - 1); //9173503
+    int d = 2462875; //взято из расчетов задачи 5
+    int str_len = strlen(x);
+
+    int* xy = (int*)malloc(str_len);
+    char* xyx = (char*)malloc(str_len + 1);
+
+    for (int i = 0; i < str_len; i++)
+    {
+        int symb = (int)x[i];
+        xy[i] = del_ost_pow(symb, d, n);
+    }
+    for (int i = 0; i < str_len; i++)
+    {
+        int symb = xy[i];
+        xyx[i] = (char)del_ost_pow(symb, e, n);
     }
     xyx[str_len] = '\0';
 
@@ -364,15 +413,18 @@ int main() {
     task3();
 
     task4();
-    
+
     task5();
-    
-    fio[] = "Numillyash";
-    task6(fio);
+
+    char str[] = "Numillyash";
+    task6(str);
     */
-    #ifdef DEBUG
+    char str[] = "Numillyash";
+    task7(str);
+
+#ifdef DEBUG
     _getch();
-    #endif // DEBUG
+#endif // DEBUG
 
     return 0;
 }
