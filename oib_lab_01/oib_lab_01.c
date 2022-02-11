@@ -237,7 +237,7 @@ void task4()
     printf("%d: %s\n", N1, (millers_method(N1) == 1) ? "Составное" : "Простое");
 }
 
-int euclide_algorithm_modifyed(int s, int t, int* a) {
+int euclide_algorithm_modified(int s, int t, int* a) {
     if (s < t)
     {
         int _ = t;
@@ -253,7 +253,7 @@ int euclide_algorithm_modifyed(int s, int t, int* a) {
 
     if (r != 0)
     {
-        euclide_algorithm_modifyed(t, r, a);
+        euclide_algorithm_modified(t, r, a);
         int _a, _b, _c, _d;
         _a = a[0];
         _b = a[1];
@@ -290,7 +290,7 @@ void task5()
     int e = 67;
 
     int a[4] = { 1,0,0,1 };
-    euclide_algorithm_modifyed(phi_n, e, a);
+    euclide_algorithm_modified(phi_n, e, a);
 #ifdef DEBUG
     printf("|%d %d|\n|%d %d|\n", a[0], a[1], a[2], a[3]);
 #endif // DEBUG
@@ -431,9 +431,14 @@ void task8(int a)
 
 int task9()
 {
-    int closed_key[] = { 2, 3, 6, 13, 27, 52, 105, 210 };
-    int m = 420;
-    int n = 37;
+    int closed_key[] = { 1,3,5,10,21,42,84,167 };// { 2, 3, 6, 13, 27, 52, 105, 210 };
+    int m = 335;//420;
+    int n = 19;//37;
+    int key = 0;
+    int a[4] = { 1,0,0,1 };
+    euclide_algorithm_modified(m, n, a);
+    key = a[1];
+
     int opened_key[8];
     printf("m = %d, n = %d\nОткрытый ключ: { ",m,n);
     for (size_t i = 0; i < 8; i++)
@@ -443,23 +448,79 @@ int task9()
     }
     printf("}\n");
 
-    printf("Do you want to crypt (c) or decrypt (d)? : ");
+    printf("Введите 'ш' чтобы шифровать или 'д' чтобы дешифровать : ");
     char ans;
     scanf("%c", &ans);
-    if (ans == 'c')
+    if (ans == 'ш')
     {
         system("cls");
-        printf("Text your message here (up to 10 symbols) : ");
-        char text[11];
+        printf("Введите сообщение (не более 10 символов) : ");
+        unsigned char text[11];
         scanf("%11s%*[^\n]%*c", text);
         int str_len = strlen(text);
-        int* sipher_text = (int*) malloc(str_len);
+        int* cipher_text = (int*) malloc(str_len);
 
+        
+        for (size_t i = 0; i < str_len; i++)
+        {
+            cipher_text[i] = 0;
+        }
 
+        for (size_t i = 0; i < str_len; i++)
+        {
+            int code = (int)text[i];
+            for (int j = 7; j >= 0; j--)
+            {
+                cipher_text[i] += (code & 1) * opened_key[j];
+                code >>= 1;    
+            }
+            printf("Шифротекст для %c (%d) : %d\n", text[i], (int)text[i], cipher_text[i]);
+        }
     }
-    elif(ans == 'd')
+    // ОИБ
+    // О - 206 - 693 
+    // И - 200 - 344 
+    // Б - 193 - 395
+    elif(ans == 'д')
     {
+        system("cls");
+        printf("Введите число символов в сообщении : ");
+        int str_len;
+        scanf("%d%*[^\n]%*c", &str_len);
+        unsigned* uncipher_text = (unsigned char*)malloc(str_len+1);
+        int* cipher_text = (int*)malloc(str_len);
+        printf("Введите числа сообщения через enter : \n");
+        for (size_t i = 0; i < str_len; i++)
+        {
+            scanf("%d", &cipher_text[i]);
+            uncipher_text[i] = (char)0;
+        }
 
+        bool binary_code[8];
+
+        for (size_t i = 0; i < str_len; i++)
+        {
+            for (size_t j = 0; j < 8; j++)
+            {
+                binary_code[j] = 0;
+            }
+            int code = (cipher_text[i] * key) % m;
+            code = (code < 0) ? code + m : code;
+            for (int j = 7; j >= 0; j--)
+            {
+                if (code >= closed_key[j])
+                {
+                    binary_code[j] = 1;
+                    code -= closed_key[j];
+                }
+            }
+            for (int j = 0; j <=7; j++)
+            {
+                uncipher_text[i] <<= 1;
+                uncipher_text[i] += binary_code[j];
+            }
+            printf("Буква для %d : %c (%d)\n", cipher_text[i], uncipher_text[i], (int)uncipher_text[i]);
+        }
     }
     else
     {
@@ -468,8 +529,9 @@ int task9()
 }
 
 int main() {
-    setlocale(LC_ALL, "rus");
-
+    SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
+    SetConsoleOutputCP(1251); // установка кодовой страницы win-cp 1251 в поток вывода
+    
     /*
     task1();
 
