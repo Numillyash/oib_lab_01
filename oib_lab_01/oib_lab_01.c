@@ -351,7 +351,7 @@ void task7(char* x)
     int d = 2462875; //взято из расчетов задачи 5
     int str_len = strlen(x);
 
-    printf("Задание #6.\nИсходная строка: %s\nПодпись s: ", x);
+    printf("Задание #7.\nИсходная строка: %s\nПодпись s: ", x);
     int* xy = (int*)malloc(str_len);
     char* xyx = (char*)malloc(str_len + 1);
     for (int i = 0; i < str_len; i++)
@@ -391,7 +391,7 @@ void task8(int a)
     int ax_y = del_ost_pow(del_ost_pow(a, x, n), y, n);
     int ay_x = del_ost_pow(del_ost_pow(a, y, n), x, n);
 
-    printf("Задание #7.\nЧисло x, число А: %d, %d\nЧисло y, число В: %d, %d\n", x, A, y, B);
+    printf("Задание #8.\nЧисло x, число А: %d, %d\nЧисло y, число В: %d, %d\n", x, A, y, B);
     printf("(a^x)^y = %d (mod %d)\n(a^y)^x = %d (mod %d)\na^(y*x) = %d (mod %d)\n\n", ax_y, n, ay_x, n, key, n);
 }
 
