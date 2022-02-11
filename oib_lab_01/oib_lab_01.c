@@ -429,6 +429,44 @@ void task8(int a)
     printf("(a^x)^y = %d (mod %d)\n(a^y)^x = %d (mod %d)\na^(y*x) = %d (mod %d)\n", ax_y, n, ay_x, n, key, n);
 }
 
+int task9()
+{
+    int closed_key[] = { 2, 3, 6, 13, 27, 52, 105, 210 };
+    int m = 420;
+    int n = 37;
+    int opened_key[8];
+    printf("m = %d, n = %d\nОткрытый ключ: { ",m,n);
+    for (size_t i = 0; i < 8; i++)
+    {
+        opened_key[i] = (closed_key[i] * n) % m;
+        printf("%d ", opened_key[i]);
+    }
+    printf("}\n");
+
+    printf("Do you want to crypt (c) or decrypt (d)? : ");
+    char ans;
+    scanf("%c", &ans);
+    if (ans == 'c')
+    {
+        system("cls");
+        printf("Text your message here (up to 10 symbols) : ");
+        char text[11];
+        scanf("%11s%*[^\n]%*c", text);
+        int str_len = strlen(text);
+        int* sipher_text = (int*) malloc(str_len);
+
+
+    }
+    elif(ans == 'd')
+    {
+
+    }
+    else
+    {
+        return -1;
+    }
+}
+
 int main() {
     setlocale(LC_ALL, "rus");
 
@@ -448,8 +486,11 @@ int main() {
     task6(str);
 
     task7(str);
-    */
+
     task8(239);
+    */
+
+    task9();
 
 #ifdef DEBUG
     _getch();
