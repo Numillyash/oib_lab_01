@@ -401,6 +401,34 @@ void task7(char* x)
     printf("%s\n", xyx);
 }
 
+
+/// <summary>
+/// Подпрограмма, выполняющая задачу 8
+/// </summary>
+void task8(int a)
+{
+    int p = 3557, q = 2579;
+    int n = p * q; // 9173503
+    int e = 67;
+    int phi_n = (p - 1) * (q - 1); //9173503
+    int d = 2462875; //взято из расчетов задачи 5
+
+    int x = 2 + rand() % (phi_n - 2);
+    int y = 2 + rand() % (phi_n - 2);
+    int A = del_ost_pow(a, x, n);
+    int B = del_ost_pow(a, y, n);
+    int key = del_ost_pow(a, x * y, n);
+
+    int ax_y = del_ost_pow(del_ost_pow(a, x, n), y, n);
+    int ay_x = del_ost_pow(del_ost_pow(a, y, n), x, n);
+
+#ifdef DEBUG
+    
+#endif // DEBUG
+
+    printf("(a^x)^y = %d (mod %d)\n(a^y)^x = %d (mod %d)\na^(y*x) = %d (mod %d)\n", ax_y, n, ay_x, n, key, n);
+}
+
 int main() {
     setlocale(LC_ALL, "rus");
 
@@ -418,9 +446,10 @@ int main() {
 
     char str[] = "Numillyash";
     task6(str);
-    */
-    char str[] = "Numillyash";
+
     task7(str);
+    */
+    task8(239);
 
 #ifdef DEBUG
     _getch();
