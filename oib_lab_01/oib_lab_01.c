@@ -1,5 +1,5 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#define DEBUG
+//#define DEBUG
 
 #include <stdio.h>
 #include <math.h>
@@ -7,10 +7,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-
-#ifdef DEBUG
-#include <conio.h>
-#endif // DEBUG
 
 #define bool char
 #define true 1
@@ -66,8 +62,9 @@ int del_ost_pow(double a, double t, int b)
 /// </summary>
 void task1()
 {
-    int r1 = (int)((unsigned long long)(pow((N_gr + N_sp), 11) + F_3) % 11);
-    printf("%d\n", r1);
+    int r1 = del_ost(F_3 + del_ost_pow((N_gr + N_sp), 11, 11), 11);
+
+    printf("Задание #1.\nN_gr = %d, N_sp = %d, F_3 = %d\nResult: %d\n\n", N_gr, N_sp, F_3, r1);
 }
 
 /// <summary>
@@ -86,6 +83,7 @@ void task2(const char* string, int m, int k)
     char rot_symb;
     k = k % m;
 
+    printf("Задание #2.\nИсходная строка = %s\nМощность алфавита: %d\nСдвиг: %d\nЗашифрованная строка (без учета буквы ё): ", string, m, k);
     for (int i = 0; i < length; i++)
     {
         if (string[i] >= 'А' && string[i] <= 'Я')
@@ -105,7 +103,7 @@ void task2(const char* string, int m, int k)
         else
             printf("%c", ' ');
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 /// <summary>
@@ -113,17 +111,18 @@ void task2(const char* string, int m, int k)
 /// </summary>
 /// <param name="a">Первое число</param>
 /// <param name="b">Второе число</param>
-/// <returns>НОД трех чисел</returns>
+/// <returns>НОД двух чисел</returns>
 int euclide_algorithm(int a, int b)
 {
+    //a = b * q_0 + r_1
     if (abs(a) < abs(b))
     {
         int _ = b;
         b = a;
         a = _;
     }
-    //a = b * q_0 + r_1
     int r = a % b;
+
 #ifdef DEBUG
     printf("%d = %d * %d + %d\n", a, b, a / b, a % b);
 #endif // DEBUG
@@ -144,6 +143,7 @@ int euclide_algorithm(int a, int b)
 int euclide_algorithm_three(int a, int b, int c)
 {
     int o_del = euclide_algorithm(a, b);
+
     if (o_del == 1)
         return 1;
     else
@@ -157,19 +157,25 @@ void task3()
 {
     int A = pow(N_gr * (8 + N_sp % 7), 2);
     int B = 11032004;
-    //printf("%d\n", r1);
 
-    printf("%d\n", euclide_algorithm(A, (B % 95) + 900));
-    printf("%d\n", euclide_algorithm(A, ((B + 50) % 97) + 700));
-    printf("%d\n", euclide_algorithm_three(A, ((B + 20) % 101) + 1500, ((B - 40) % 103) + 2500));
+    printf("Задание #3.\nЧисло А = %d\nЧисло В: %d\n", A, B);
+    printf("НОД(А, В(mod 95) + 900) = %d\n", euclide_algorithm(A, (B % 95) + 900));
+    printf("НОД(А, (В+50)(mod 97) + 700) = %d\n", euclide_algorithm(A, ((B + 50) % 97) + 700));
+    printf("НОД(А, (В+20)(mod 101) + 1500, (В-40)(mod 103) + 2500) = %d\n\n", euclide_algorithm_three(A, ((B + 20) % 101) + 1500, ((B - 40) % 103) + 2500));
 }
 
+/// <summary>
+/// Подпрограмма, проверяющая число на "простоту" с помощью метода Миллера
+/// </summary>
+/// <param name="N">Число, которое необходимо проверить</param>
+/// <returns>1 - если число составное, 0 - если число простое</returns>
 bool millers_method(int N)
 {
     //N-1 = 2^s * t, t - нечетно
     int s = 0;
     int t = N - 1;
-    while (t % 2 == 0)
+
+    while (t & 1 == 0)
     {
         t >>= 1;
         s++;
@@ -186,9 +192,7 @@ bool millers_method(int N)
     for (int i = 0; i < n; i++)
     {
         fl1 = true; fl2 = true;
-
         a = 2 + rand() % (N - 2);
-
         if (euclide_algorithm(N, a) != 1) //свойство 1
         {
             fl1 = false;
@@ -196,7 +200,6 @@ bool millers_method(int N)
             printf("\nУсловие 1 нарушено, a = %d, t = %d, N = %d. \nN кратно a", a, t, N);
 #endif // DEBUG
         }
-
         if (del_ost_pow(a, t, N) != 1) // свойство 2
         {
             int k = 1;
@@ -213,7 +216,6 @@ bool millers_method(int N)
                 printf("\nУсловие 2 нарушено, a = %d, t = %d, k = %d, N = %d. \nМодули чисел: без k %d, с k %d", a, t, k, N, del_ost_pow(a, t, N), del_ost_pow(a, t * pow(2, k - 1), N));
 #endif // DEBUG
         }
-
         if (!fl1 || !fl2)
         {
 #ifdef DEBUG
@@ -231,12 +233,20 @@ bool millers_method(int N)
 /// </summary>
 void task4()
 {
+    printf("Задание #4.\n");
     int N = 10483;
-    printf("%d: %s\n", N, (millers_method(N) == 1) ? "Составное" : "Простое");
+    printf("По методу миллера посчитано, что число %d: %s\n", N, (millers_method(N) == 1) ? "Составное" : "Простое");
     int N1 = 487;
-    printf("%d: %s\n", N1, (millers_method(N1) == 1) ? "Составное" : "Простое");
+    printf("По методу миллера посчитано, что число %d: %s\n\n", N1, (millers_method(N1) == 1) ? "Составное" : "Простое");
 }
 
+/// <summary>
+/// Модифицированный алгоритм Евклида.
+/// </summary>
+/// <param name="s">Первое число для НОД</param>
+/// <param name="t">Второе число для НОД</param>
+/// <param name="a">Массив, в котором хранится матрица для матричного представления алгоритма Евклида</param>
+/// <returns>НОД двух чисел</returns>
 int euclide_algorithm_modified(int s, int t, int* a) {
     if (s < t)
     {
@@ -244,9 +254,10 @@ int euclide_algorithm_modified(int s, int t, int* a) {
         t = s;
         s = _;
     }
-    //s = t * q_0 + r_1
+
     int r = s % t;
     int q = s / t;
+
 #ifdef DEBUG
     printf("%d = %d * %d + %d\n", s, t, s / t, s % t);
 #endif // DEBUG
@@ -288,24 +299,18 @@ void task5()
     int n = p * q;
     int phi_n = (p - 1) * (q - 1); //9173503
     int e = 67;
-
     int a[4] = { 1,0,0,1 };
+
+    printf("Задание #5.\nЧисло p = %d, число q = %d\nЧисло n = %d\nф(n) = %d\ne = %d\n", p, q, n, phi_n, e);
     euclide_algorithm_modified(phi_n, e, a);
-#ifdef DEBUG
-    printf("|%d %d|\n|%d %d|\n", a[0], a[1], a[2], a[3]);
-#endif // DEBUG
-
     int d = a[1]; // 2462875
-
-#ifdef DEBUG
-    printf("e = %lf, d = %lf, e*d = %lf, phi_n = %lf\n", (double)e, (double)d, (double)e * (double)d, (double)phi_n);
-    printf("%d\n", del_ost((double)e * (double)d, phi_n));
-#endif // DEBUG
+    printf("d = %d\n\n", d);
 }
 
 /// <summary>
 /// Подпрограмма, выполняющая задачу 6
 /// </summary>
+/// <param name="x">Строка, которую необходимо зашифровать</param>
 void task6(char* x)
 {
     int p = 3557, q = 2579;
@@ -315,41 +320,23 @@ void task6(char* x)
     int d = 2462875; //взято из расчетов задачи 5
     int str_len = strlen(x);
 
+    printf("Задание #6.\nИсходная строка: %s\nЗакодированная строка: ", x);
     int* xy = (int*)malloc(str_len);
     char* xyx = (char*)malloc(str_len + 1);
-
     for (int i = 0; i < str_len; i++)
     {
         int symb = (int)x[i];
         xy[i] = del_ost_pow(symb, e, n);
+        printf("%d ", xy[i]);
     }
+    printf("\nРаскодированная строка: ");
     for (int i = 0; i < str_len; i++)
     {
         int symb = xy[i];
         xyx[i] = (char)del_ost_pow(symb, d, n);
     }
     xyx[str_len] = '\0';
-
-#ifdef DEBUG
-    for (int i = 0; i < str_len; i++)
-    {
-        printf("%d ", (int)x[i]);
-    }
-    printf("\n");
-    for (int i = 0; i < str_len; i++)
-    {
-        printf("%d ", (int)xy[i]);
-    }
-    printf("\n");
-    for (int i = 0; i < str_len; i++)
-    {
-        printf("%d ", (int)xyx[i]);
-    }
-    printf("\n");
-#endif // DEBUG
-
-
-    printf("%s\n", xyx);
+    printf("%s\n\n", xyx);
 }
 
 /// <summary>
@@ -364,47 +351,29 @@ void task7(char* x)
     int d = 2462875; //взято из расчетов задачи 5
     int str_len = strlen(x);
 
+    printf("Задание #6.\nИсходная строка: %s\nПодпись s: ", x);
     int* xy = (int*)malloc(str_len);
     char* xyx = (char*)malloc(str_len + 1);
-
     for (int i = 0; i < str_len; i++)
     {
         int symb = (int)x[i];
         xy[i] = del_ost_pow(symb, d, n);
+        printf("%d ", xy[i]);
     }
+    printf("\nРаскодированная подпись: ");
     for (int i = 0; i < str_len; i++)
     {
         int symb = xy[i];
         xyx[i] = (char)del_ost_pow(symb, e, n);
     }
     xyx[str_len] = '\0';
-
-#ifdef DEBUG
-    for (int i = 0; i < str_len; i++)
-    {
-        printf("%d ", (int)x[i]);
-    }
-    printf("\n");
-    for (int i = 0; i < str_len; i++)
-    {
-        printf("%d ", (int)xy[i]);
-    }
-    printf("\n");
-    for (int i = 0; i < str_len; i++)
-    {
-        printf("%d ", (int)xyx[i]);
-    }
-    printf("\n");
-#endif // DEBUG
-
-
-    printf("%s\n", xyx);
+    printf("%s\n\n", xyx);
 }
-
 
 /// <summary>
 /// Подпрограмма, выполняющая задачу 8
 /// </summary>
+/// <param name="a">Параметр а для сеансового ключа</param>
 void task8(int a)
 {
     int p = 3557, q = 2579;
@@ -422,24 +391,25 @@ void task8(int a)
     int ax_y = del_ost_pow(del_ost_pow(a, x, n), y, n);
     int ay_x = del_ost_pow(del_ost_pow(a, y, n), x, n);
 
-#ifdef DEBUG
-    
-#endif // DEBUG
-
-    printf("(a^x)^y = %d (mod %d)\n(a^y)^x = %d (mod %d)\na^(y*x) = %d (mod %d)\n", ax_y, n, ay_x, n, key, n);
+    printf("Задание #7.\nЧисло x, число А: %d, %d\nЧисло y, число В: %d, %d\n", x, A, y, B);
+    printf("(a^x)^y = %d (mod %d)\n(a^y)^x = %d (mod %d)\na^(y*x) = %d (mod %d)\n\n", ax_y, n, ay_x, n, key, n);
 }
 
+/// <summary>
+/// Подпрограмма, выполняющая задачу 9. 
+/// <para>Утилита шифрования/дешифрования, алгоритм Меркля-Хеллмана</para>
+/// </summary>
 int task9()
 {
-    int closed_key[] = { 1,3,5,10,21,42,84,167 };// { 2, 3, 6, 13, 27, 52, 105, 210 };
-    int m = 335;//420;
-    int n = 19;//37;
+    int closed_key[] = { 2, 3, 6, 13, 27, 52, 105, 210 };
+    int m = 420;
+    int n = 37;
     int key = 0;
     int a[4] = { 1,0,0,1 };
     euclide_algorithm_modified(m, n, a);
     key = a[1];
-
     int opened_key[8];
+    
     printf("m = %d, n = %d\nОткрытый ключ: { ",m,n);
     for (size_t i = 0; i < 8; i++)
     {
@@ -477,10 +447,6 @@ int task9()
             printf("Шифротекст для %c (%d) : %d\n", text[i], (int)text[i], cipher_text[i]);
         }
     }
-    // ОИБ
-    // О - 206 - 693 
-    // И - 200 - 344 
-    // Б - 193 - 395
     elif(ans == 'д')
     {
         system("cls");
@@ -521,6 +487,7 @@ int task9()
             }
             printf("Буква для %d : %c (%d)\n", cipher_text[i], uncipher_text[i], (int)uncipher_text[i]);
         }
+        printf("Сообщение: %s\n", uncipher_text);
     }
     else
     {
@@ -531,8 +498,7 @@ int task9()
 int main() {
     SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
     SetConsoleOutputCP(1251); // установка кодовой страницы win-cp 1251 в поток вывода
-    
-    /*
+
     task1();
 
     char fio[] = "Улановский Георгий Алексеевич";
@@ -550,13 +516,8 @@ int main() {
     task7(str);
 
     task8(239);
-    */
-
-    task9();
-
-#ifdef DEBUG
-    _getch();
-#endif // DEBUG
-
+    
+    //task9();
+    
     return 0;
 }
