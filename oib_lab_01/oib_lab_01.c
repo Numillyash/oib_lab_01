@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <Windows.h>
 
 #define bool char
 #define true 1
@@ -32,7 +33,7 @@ int del_ost(double a, int b)
     if (a == 0)
         return 0;
     else
-        return ((int)a < 0) ? a + b : a;
+        return ((int)a < 0) ? (int)a + b : (int)a;
 }
 
 /// <summary>
@@ -54,7 +55,7 @@ int del_ost_pow(double a, double t, int b)
         {
             ost = del_ost(ost * d, b);
         }
-    return ost;
+    return (int)ost;
 }
 
 /// <summary>
@@ -77,7 +78,7 @@ void task2(const char* string, int m, int k)
 {
     int symb_first_small = (int)'а';
     int symb_first_big = (int)'А';
-    int length = strlen(string);
+    int length = (int)strlen(string);
     // x -> (x+k)mod m
     int numb, rot_numb;
     char rot_symb;
@@ -131,6 +132,7 @@ int euclide_algorithm(int a, int b)
         euclide_algorithm(b, r);
     else
         return b;
+    return 1;
 }
 
 /// <summary>
@@ -148,6 +150,7 @@ int euclide_algorithm_three(int a, int b, int c)
         return 1;
     else
         return euclide_algorithm(c, o_del);
+    return 1;
 }
 
 /// <summary>
@@ -155,7 +158,7 @@ int euclide_algorithm_three(int a, int b, int c)
 /// </summary>
 void task3()
 {
-    int A = pow(N_gr * (8 + N_sp % 7), 2);
+    int A = (int)pow(N_gr * (8 + N_sp % 7), 2);
     int B = 11032004;
 
     printf("Задание #3.\nЧисло А = %d\nЧисло В: %d\n", A, B);
@@ -175,7 +178,7 @@ bool millers_method(int N)
     int s = 0;
     int t = N - 1;
 
-    while (t & 1 == 0)
+    while ((t & 1) == 0)
     {
         t >>= 1;
         s++;
@@ -185,7 +188,7 @@ bool millers_method(int N)
     printf("N-1 = 2^%d * %d\n", s, t);
 #endif // DEBUG
 
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     int n = 1000;
     int a;
     bool fl1, fl2;
@@ -288,6 +291,7 @@ int euclide_algorithm_modified(int s, int t, int* a) {
         a[3] = _c - _d * q;
         return t;
     }
+    return 1;
 }
 
 /// <summary>
@@ -318,7 +322,7 @@ void task6(char* x)
     int e = 67;
     int phi_n = (p - 1) * (q - 1); //9173503
     int d = 2462875; //взято из расчетов задачи 5
-    int str_len = strlen(x);
+    int str_len = (int)strlen(x);
 
     printf("Задание #6.\nИсходная строка: %s\nЗакодированная строка: ", x);
     int* xy = (int*)malloc(str_len);
@@ -349,7 +353,7 @@ void task7(char* x)
     int e = 67;
     int phi_n = (p - 1) * (q - 1); //9173503
     int d = 2462875; //взято из расчетов задачи 5
-    int str_len = strlen(x);
+    int str_len = (int)strlen(x);
 
     printf("Задание #7.\nИсходная строка: %s\nПодпись s: ", x);
     int* xy = (int*)malloc(str_len);
@@ -427,7 +431,7 @@ int task9()
         printf("Введите сообщение (не более 10 символов) : ");
         unsigned char text[11];
         scanf("%11s%*[^\n]%*c", text);
-        int str_len = strlen(text);
+        int str_len = (int)strlen(text);
         int* cipher_text = (int*) malloc(str_len);
 
         
