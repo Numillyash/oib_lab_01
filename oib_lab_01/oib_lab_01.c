@@ -411,7 +411,7 @@ int task9()
     int opened_key[8];
     
     printf("m = %d, n = %d\nОткрытый ключ: { ",m,n);
-    for (size_t i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++)
     {
         opened_key[i] = (closed_key[i] * n) % m;
         printf("%d ", opened_key[i]);
@@ -431,12 +431,12 @@ int task9()
         int* cipher_text = (int*) malloc(str_len);
 
         
-        for (size_t i = 0; i < str_len; i++)
+        for (int i = 0; i < str_len; i++)
         {
             cipher_text[i] = 0;
         }
 
-        for (size_t i = 0; i < str_len; i++)
+        for (int i = 0; i < str_len; i++)
         {
             int code = (int)text[i];
             for (int j = 7; j >= 0; j--)
@@ -453,10 +453,10 @@ int task9()
         printf("Введите число символов в сообщении : ");
         int str_len;
         scanf("%d%*[^\n]%*c", &str_len);
-        unsigned* uncipher_text = (unsigned char*)malloc(str_len+1);
+        unsigned char* uncipher_text = (unsigned char*)malloc(str_len+1);
         int* cipher_text = (int*)malloc(str_len);
         printf("Введите числа сообщения через enter : \n");
-        for (size_t i = 0; i < str_len; i++)
+        for (int i = 0; i < str_len; i++)
         {
             scanf("%d", &cipher_text[i]);
             uncipher_text[i] = (char)0;
@@ -464,9 +464,9 @@ int task9()
 
         bool binary_code[8];
 
-        for (size_t i = 0; i < str_len; i++)
+        for (int i = 0; i < str_len; i++)
         {
-            for (size_t j = 0; j < 8; j++)
+            for (int j = 0; j < 8; j++)
             {
                 binary_code[j] = 0;
             }
@@ -489,10 +489,7 @@ int task9()
         }
         printf("Сообщение: %s\n", uncipher_text);
     }
-    else
-    {
-        return -1;
-    }
+    return -1;
 }
 
 int main() {
